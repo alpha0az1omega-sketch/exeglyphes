@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 620" width="500" height="620" font-family="monospace">
+  <title>EXEGLYPHE 001 — Rule 110 — Cellular Automaton</title>
+  <desc>Self-executing visual form. Live: https://alpha0az1omega-sketch.github.io/exeglyphes/versions/001_regle110/</desc>
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:exg="https://alpha0az1omega.dev/exeglyphe#">
+      <rdf:Description>
+        <exg:titre>EXEGLYPHE 001</exg:titre>
+        <exg:sous_titre>Rule 110 — Cellular Automaton</exg:sous_titre>
+        <exg:formule>rule = 01101110</exg:formule>
+        <exg:url>https://alpha0az1omega-sketch.github.io/exeglyphes/versions/001_regle110/</exg:url>
+        <exg:hash>7b3ee202aacc3cf8</exg:hash>
+        <exg:auteur>alpha0az1omega</exg:auteur>
+        <exg:annee>2026</exg:annee>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+
+  <defs>
+    <radialGradient id="glow_001_regle110">
+      <stop offset="0%" stop-color="#7adfff" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#7adfff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="500" height="620" fill="#0a0a12"/>
+
+  <!-- Titre -->
+  <text x="20" y="30" fill="#7adfff" font-size="14" font-weight="bold" letter-spacing="3">
+    EXEGLYPHE 001
+  </text>
+  <text x="20" y="50" fill="#8888a0" font-size="10">
+    Rule 110 — Cellular Automaton
+  </text>
+
+  <!-- Animation SMIL : cercle pulsant + lignes rotatives -->
+  <g transform="translate(250, 200)">
+    <circle r="80" fill="none" stroke="#7adfff" stroke-width="0.5" opacity="0.3">
+      <animate attributeName="r" values="80;90;80" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="60" fill="none" stroke="#7adfff" stroke-width="0.5" opacity="0.4">
+      <animate attributeName="r" values="60;70;60" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="40" fill="url(#glow_001_regle110)">
+      <animate attributeName="r" values="40;50;40" dur="1.5s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- 12 lignes rotatives -->
+    <g>
+      <animateTransform attributeName="transform" type="rotate"
+                        from="0" to="360" dur="12s" repeatCount="indefinite"/>
+      <line x1="0" y1="-90" x2="0" y2="-75" stroke="#7adfff" stroke-width="1.5" opacity="0.8"/>
+      <line x1="0" y1="-90" x2="0" y2="-75" stroke="#7adfff" stroke-width="1.5" opacity="0.8" transform="rotate(30)"/>
+      <line x1="0" y1="-90" x2="0" y2="-75" stroke="#7adfff" stroke-width="1.5" opacity="0.8" transform="rotate(60)"/>
+      <line x1="0" y1="-90" x2="0" y2="-75" stroke="#7adfff" stroke-width="1.5" opacity="0.8" transform="rotate(90)"/>
+      <line x1="0" y1="-90" x2="0" y2="-75" stroke="#7adfff" stroke-width="1.5" opacity="0.8" transform="rotate(120)"/>
+      <line x1="0" y1="-90" x2="0" y2="-75" stroke="#7adfff" stroke-width="1.5" opacity="0.8" transform="rotate(150)"/>
+      <line x1="0" y1="-90" x2="0" y2="-75" stroke="#7adfff" stroke-width="1.5" opacity="0.8" transform="rotate(180)"/>
+      <line x1="0" y1="-90" x2="0" y2="-75" stroke="#7adfff" stroke-width="1.5" opacity="0.8" transform="rotate(210)"/>
+      <line x1="0" y1="-90" x2="0" y2="-75" stroke="#7adfff" stroke-width="1.5" opacity="0.8" transform="rotate(240)"/>
+      <line x1="0" y1="-90" x2="0" y2="-75" stroke="#7adfff" stroke-width="1.5" opacity="0.8" transform="rotate(270)"/>
+      <line x1="0" y1="-90" x2="0" y2="-75" stroke="#7adfff" stroke-width="1.5" opacity="0.8" transform="rotate(300)"/>
+      <line x1="0" y1="-90" x2="0" y2="-75" stroke="#7adfff" stroke-width="1.5" opacity="0.8" transform="rotate(330)"/>
+    </g>
+
+    <!-- Point central pulsant -->
+    <circle r="8" fill="#ffffff" opacity="0.9">
+      <animate attributeName="opacity" values="0.9;0.3;0.9" dur="1s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Formule -->
+  <text x="250" y="330" fill="#7adfff" font-size="12" text-anchor="middle" opacity="0.8">
+    rule = 01101110
+  </text>
+
+  <!-- QR code -->
+  <image x="180" y="360" width="140" height="140"
+         href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQMAAAAMyBcgAAAABlBMVEUKChLAwNhmAQb0AAACaklEQVR42u1cS27sMAwzmgP4SHN1H8kHMKBObFFSBkUX3b1HapHJ/FBAYUWKUqY1hUKh+DW6eYzuh/aa1/tg++z9iZethg+t9/Ovv/wZfenf+NKNiHUebeCwcWB2w+LjjfNhZe+/R8T+33cw3JWhtQuHxMupIEIEEyLuyx1cgWoRhUKIoETE4QrHwRWKYgkRlDoC2Kg4iDekI3gQkb0GCsVPB/UaNIh4YMO5Yl/4TRN3jTg4UPaoWCPExGENc40JwrhOgRBrsLAGTh8GhE3vNQCG+2EqeySsgTZjX3OcgT/CwnR5qewxsIZZmtXn6vtZWlerqUbQ+BFHKcwqKjeJpE3ldUO9BglrxEDLRxphRdiMXiP1hrLHgQiniZAQziRwIaQjmHqNMwOPXuPAYsCZSHNKLjYNImpzYWW0BWUpHUFXIxpoosVAK5uLly31Glw6Ai5EqshtW18hK6raVPZoasRuOLznvEr36Z4lkKPssShLl40pKyz5A6+pRrCwxvgQmtFpBhjculL2GGoEfKloN/1pDytiNvkRXKyRS1OteNeP7fwy4VD2SFgjxUSalHjX1ab8CJoaseP0GjHksuJHWNnTV/Yo/AiL/QjgIKtF7meLNXgQMUNjPpYkfFbeH/dwKHsMrIGeM9cl8Fp4FFKWRDWiWBHhXpZlmdHT2Vb2KGpE3hv+uAk4moseg3BljwER9d7w0m6Wdfxibyt7FIjAOoxZmYKOXjclirOt7NEgovxGQGxKxBQ0OlJljwoRebdOqzYVPEvVCDodUUTlyMqA3xaRjmDrNVaFRXrXZ9yVG1bKHosfoVAoFB/xDd3FaJtvKwAnAAAAAElFTkSuQmCC"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQMAAAAMyBcgAAAABlBMVEUKChLAwNhmAQb0AAACaklEQVR42u1cS27sMAwzmgP4SHN1H8kHMKBObFFSBkUX3b1HapHJ/FBAYUWKUqY1hUKh+DW6eYzuh/aa1/tg++z9iZethg+t9/Ovv/wZfenf+NKNiHUebeCwcWB2w+LjjfNhZe+/R8T+33cw3JWhtQuHxMupIEIEEyLuyx1cgWoRhUKIoETE4QrHwRWKYgkRlDoC2Kg4iDekI3gQkb0GCsVPB/UaNIh4YMO5Yl/4TRN3jTg4UPaoWCPExGENc40JwrhOgRBrsLAGTh8GhE3vNQCG+2EqeySsgTZjX3OcgT/CwnR5qewxsIZZmtXn6vtZWlerqUbQ+BFHKcwqKjeJpE3ldUO9BglrxEDLRxphRdiMXiP1hrLHgQiniZAQziRwIaQjmHqNMwOPXuPAYsCZSHNKLjYNImpzYWW0BWUpHUFXIxpoosVAK5uLly31Glw6Ai5EqshtW18hK6raVPZoasRuOLznvEr36Z4lkKPssShLl40pKyz5A6+pRrCwxvgQmtFpBhjculL2GGoEfKloN/1pDytiNvkRXKyRS1OteNeP7fwy4VD2SFgjxUSalHjX1ab8CJoaseP0GjHksuJHWNnTV/Yo/AiL/QjgIKtF7meLNXgQMUNjPpYkfFbeH/dwKHsMrIGeM9cl8Fp4FFKWRDWiWBHhXpZlmdHT2Vb2KGpE3hv+uAk4moseg3BljwER9d7w0m6Wdfxibyt7FIjAOoxZmYKOXjclirOt7NEgovxGQGxKxBQ0OlJljwoRebdOqzYVPEvVCDodUUTlyMqA3xaRjmDrNVaFRXrXZ9yVG1bKHosfoVAoFB/xDd3FaJtvKwAnAAAAAElFTkSuQmCC"/>
+
+  <!-- URL -->
+  <text x="250" y="560" fill="#c0c0d8" font-size="8" text-anchor="middle" opacity="0.6">
+    Scan to see live
+  </text>
+  <text x="250" y="575" fill="#7adfff" font-size="7" text-anchor="middle" opacity="0.7">
+    alpha0az1omega-sketch.github.io/exeglyphes
+  </text>
+
+  <!-- Signature -->
+  <text x="250" y="600" fill="#666680" font-size="7" text-anchor="middle">
+    sha256: 7b3ee202aacc3cf8... · alpha0az1omega · 2026
+  </text>
+</svg>
