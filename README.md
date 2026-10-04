@@ -39,6 +39,13 @@ Or directly:
 - `versions/001_regle110/index.html`
 - `versions/002_projets_calcul/index.html`
 
+## SVG exports (SMS, email)
+
+These SVGs work in emails and can be shared by SMS:
+
+- [001 — Rule 110](exports/001_regle110.svg)
+- [002 — Projects in Live Calculation](exports/002_projets_calcul.svg)
+
 ## License
 
 - Code: MIT
