@@ -1,0 +1,15 @@
+EXEGLYPHE — THÈME PHYSIQUE
+
+Crée un exeglyphe qui montre une loi physique en action.
+Chaque particule obéit à une équation différentielle.
+Le spectateur voit la physique s'exécuter.
+
+Idées :
+- Gravitation à N corps
+- Ondes dans un milieu
+- Champ électromagnétique
+- Effet de la température sur la matière
+- Cristallisation
+
+Contrainte : chaque point doit être calculé à partir d'une
+équation visible dans le HUD.

@@ -1,0 +1,14 @@
+EXEGLYPHE — THÈME MATHÉMATIQUE
+
+Crée un exeglyphe qui montre une structure mathématique.
+Chaque forme est une équation, une fractale, ou une suite.
+
+Idées :
+- Suites de Fibonacci / Lucas
+- Fractales (Mandelbrot, Julia)
+- Nombres premiers
+- Équations de Lorenz
+- Théorème de Pythagore visuel
+- Géométrie sacrée
+
+Contrainte : afficher la formule ou la suite en bas de l'écran.

@@ -1,0 +1,15 @@
+EXEGLYPHE — THÈME IA / AGENT
+
+Crée un exeglyphe qui montre une IA ou un agent en action.
+Chaque neurone, chaque décision, chaque apprentissage = un calcul.
+
+Idées :
+- Réseau de neurones qui apprend
+- Arbre de décision qui s'étend
+- Agent qui explore un espace
+- Backpropagation visuelle
+- Attention (transformer) en direct
+- Mémoire à court/long terme
+
+Contrainte : afficher les poids, les activations, ou les décisions
+en temps réel dans le HUD.

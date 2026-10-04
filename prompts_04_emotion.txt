@@ -1,0 +1,13 @@
+EXEGLYPHE — THÈME ÉMOTIONNEL
+
+Crée un exeglyphe qui traduit une émotion en calcul.
+Chaque émotion = une courbe, une couleur, un rythme.
+
+Idées :
+- Joie (fréquence rapide, couleurs vives)
+- Tristesse (fréquence lente, couleurs froides)
+- Colère (explosions, rouge)
+- Sérénité (ondes douces, bleu)
+- Amour (deux courbes qui se rapprochent)
+
+Contrainte : afficher le nom de l'émotion et sa formule.

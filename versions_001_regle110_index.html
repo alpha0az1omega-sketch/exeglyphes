@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>EXEGLYPHE 001 — Automate Cellulaire Règle 110</title>
+<style>
+  body { margin:0; background:#0a0a12; color:#c0c0d8; font-family:monospace; overflow:hidden; }
+  canvas { display:block; margin:0 auto; background:#0a0a12; }
+  #hud { position:fixed; top:12px; left:12px; font-size:11px; line-height:1.6;
+         background:rgba(10,10,18,0.85); padding:10px 14px; border:1px solid #2a1a4a;
+         border-radius:6px; z-index:10; }
+  #hud .t { color:#7adfff; font-weight:bold; letter-spacing:2px; }
+  #hud .v { color:#ffe77a; }
+  #hud .s { color:#8888a0; font-size:9px; }
+  #sig { position:fixed; bottom:12px; right:12px; font-size:9px; color:#8888a0;
+         background:rgba(10,10,18,0.85); padding:6px 10px; border-radius:4px; z-index:10; }
+</style>
+</head>
+<body>
+<div id="hud">
+  <div class="t">EXEGLYPHE 001</div>
+  <div class="s">automate cellulaire · règle 110</div>
+  <div>génération : <span class="v" id="gen">0</span></div>
+  <div>cellules vivantes : <span class="v" id="viv">0</span></div>
+  <div>entropie : <span class="v" id="ent">0.000</span></div>
+  <div class="s">clic = reset avec nouvelle graine</div>
+</div>
+<div id="sig">sha256: <span id="hash">calcul...</span></div>
+<canvas id="c" width="480" height="480"></canvas>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  EXEGLYPHE 001
+//  Un glyphe qui n'est pas dessiné. Il est calculé.
+//  Chaque cellule est un bit. Chaque bit obéit à une règle.
+//  La règle 110 est Turing-complète — elle peut tout calculer.
+// ═══════════════════════════════════════════════════════════
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+const N = 240;           // nombre de cellules par ligne
+const CELL = canvas.width / N;
+const MAX_ROWS = 240;    // profondeur d'affichage
+
+let cells = new Uint8Array(N);
+let generation = 0;
+let history = [];
+let seed = Math.floor(Math.random() * 1e9);
+
+// ─── RÈGLE 110 ───
+// Pour chaque triplet (gauche, centre, droite), la règle donne 0 ou 1.
+// Binaire de 110 = 01101110
+const RULE_110 = [0,1,1,0,1,1,1,0]; // index = triplet 111..000
+
+function appliquerRegle(triplet) {
+  return RULE_110[triplet];
+}
+
+function step() {
+  let next = new Uint8Array(N);
+  for (let i = 0; i < N; i++) {
+    const g = cells[(i - 1 + N) % N];
+    const c = cells[i];
+    const d = cells[(i + 1) % N];
+    const triplet = (g << 2) | (c << 1) | d;
+    next[i] = appliquerRegle(triplet);
+  }
+  cells = next;
+  generation++;
+}
+
+// ─── INITIALISATION ───
+function reset(newSeed) {
+  seed = newSeed || seed;
+  // Générateur pseudo-aléatoire déterministe depuis la graine
+  let s = seed;
+  const rng = () => {
+    s = (s * 1664525 + 1013904223) % 4294967296;
+    return s / 4294967296;
+  };
+  cells = new Uint8Array(N);
+  // Cellule unique au centre = "graine" classique
+  cells[Math.floor(N/2)] = 1;
+  // OU distribution depuis la graine
+  if (seed % 2 === 0) {
+    for (let i = 0; i < N; i++) {
+      cells[i] = rng() < 0.5 ? 1 : 0;
+    }
+  }
+  generation = 0;
+  history = [];
+}
+
+// ─── MÉTRIQUES EN DIRECT ───
+function entropie() {
+  let vivantes = 0;
+  for (let i = 0; i < N; i++) vivantes += cells[i];
+  const p = vivantes / N;
+  if (p === 0 || p === 1) return 0;
+  return -(p * Math.log2(p) + (1-p) * Math.log2(1-p));
+}
+
+function vivantes() {
+  let n = 0;
+  for (let i = 0; i < N; i++) n += cells[i];
+  return n;
+}
+
+// ─── DESSIN ───
+function dessiner() {
+  // Effet de traînée : on ne réinitialise pas entièrement
+  ctx.fillStyle = 'rgba(10,10,18,0.08)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Ligne du haut = génération courante
+  const y = (generation % MAX_ROWS) * CELL;
+
+  for (let i = 0; i < N; i++) {
+    if (cells[i]) {
+      const t = generation / 300;
+      const hue = (200 + Math.sin(t + i * 0.01) * 60) % 360;
+      ctx.fillStyle = `hsl(${hue}, 80%, ${60 + Math.sin(t*2 + i)*10}%)`;
+      ctx.fillRect(i * CELL, y, CELL, CELL);
+    }
+  }
+}
+
+// ─── BOUCLE ───
+let frame = 0;
+function boucle() {
+  frame++;
+  // 60 fps mais on avance 1 génération tous les 3 frames
+  if (frame % 3 === 0) {
+    step();
+    dessiner();
+
+    document.getElementById('gen').textContent = generation;
+    document.getElementById('viv').textContent = vivantes();
+    document.getElementById('ent').textContent = entropie().toFixed(3);
+
+    // Reset automatique après 240 générations
+    if (generation >= MAX_ROWS) {
+      reset();
+      ctx.fillStyle = '#0a0a12';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+  requestAnimationFrame(boucle);
+}
+
+// ─── INTERACTION ───
+canvas.addEventListener('click', () => {
+  reset(Math.floor(Math.random() * 1e9));
+  ctx.fillStyle = '#0a0a12';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+});
+
+// ─── SIGNATURE ───
+async function signer() {
+  // Hash du contenu de la page = signature de l'œuvre
+  const contenu = document.documentElement.outerHTML;
+  const data = new TextEncoder().encode(contenu);
+  const hashBuf = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = Array.from(new Uint8Array(hashBuf))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+  document.getElementById('hash').textContent = hashHex.slice(0, 32);
+}
+
+// ─── DÉMARRAGE ───
+reset(seed);
+ctx.fillStyle = '#0a0a12';
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+boucle();
+signer();
+</script>
+</body>
+</html>

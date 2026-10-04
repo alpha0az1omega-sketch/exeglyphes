@@ -1,0 +1,14 @@
+EXEGLYPHE — THÈME PROJETS
+
+Crée un exeglyphe qui montre TES projets sous forme de calculs.
+Chaque projet = une formule qui s'exécute.
+Le spectateur voit le projet SANS lire le code.
+
+Idées :
+- Chaque projet = une orbite différente
+- Chaque projet = une couleur calculée
+- Chaque projet = une fréquence sonore
+- Chaque projet = un degré de complexité
+- Chaque projet = une vitesse d'évolution
+
+Contrainte : lister les projets dans le HUD avec leurs formules.

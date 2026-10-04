@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>EXEGLYPHE 002 — Projets en Calcul Direct</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0a0a12; color:#c0c0d8; font-family:monospace; overflow:hidden; height:100vh; }
+  canvas { display:block; }
+  #hud { position:fixed; top:12px; left:12px; font-size:11px; line-height:1.6;
+         background:rgba(10,10,18,0.85); padding:10px 14px; border:1px solid #2a1a4a;
+         border-radius:6px; z-index:10; max-width:260px; }
+  #hud .t { color:#7adfff; font-weight:bold; letter-spacing:2px; }
+  #hud .v { color:#ffe77a; }
+  #hud .s { color:#8888a0; font-size:9px; }
+  #hud .proj { font-size:10px; margin:2px 0; }
+  #hud .proj .dot { display:inline-block; width:6px; height:6px; border-radius:50%; margin-right:6px; }
+  #sig { position:fixed; bottom:10px; right:10px; font-size:9px; color:#8888a0;
+         background:rgba(10,10,18,0.85); padding:6px 10px; border-radius:4px; z-index:10; }
+  #formule { position:fixed; bottom:10px; left:10px; font-size:10px; color:#7adfff;
+             background:rgba(10,10,18,0.85); padding:6px 10px; border-radius:4px; z-index:10; }
+</style>
+</head>
+<body>
+<div id="hud">
+  <div class="t">EXEGLYPHE 002</div>
+  <div class="s">projets en calcul direct</div>
+  <div style="margin-top:8px;">—</div>
+  <div id="projets"></div>
+  <div style="margin-top:8px;">—</div>
+  <div>temps : <span class="v" id="t">0</span>s</div>
+  <div>calculs : <span class="v" id="calc">0</span></div>
+</div>
+<div id="formule">—</div>
+<div id="sig">sha256: <span id="hash">calcul...</span></div>
+<canvas id="c"></canvas>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  EXEGLYPHE 002
+//  Chaque projet est une FORMULE qui s'exécute en direct.
+//  Pas d'image. Pas de trait. Du calcul pur.
+//  Ce qu'on voit = ce qui est calculé, à l'instant.
+// ═══════════════════════════════════════════════════════════
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+let W, H, CX, CY, T = 0;
+let DPR = window.devicePixelRatio || 1;
+
+// ─── LES PROJETS ───
+// Chaque projet est une fonction mathématique qui produit une forme.
+const PROJETS = [
+  { nom: "adn",       teinte: 280, formule: "r(t) = 80 + 40·sin(3t)",           f: (t) => 80 + 40 * Math.sin(3 * t) },
+  { nom: "flash",     teinte: 200, formule: "r(t) = 60 + 30·cos(5t)",           f: (t) => 60 + 30 * Math.cos(5 * t) },
+  { nom: "conscience",teinte: 330, formule: "r(t) = 50 + 50·sin(t/2)·cos(2t)",  f: (t) => 50 + 50 * Math.sin(t/2) * Math.cos(2 * t) },
+  { nom: "coffre",    teinte: 40,  formule: "r(t) = 90 + 20·sin(7t)·cos(t)",    f: (t) => 90 + 20 * Math.sin(7 * t) * Math.cos(t) },
+  { nom: "preuve",    teinte: 10,  formule: "r(t) = 70 + 30·|sin(2t)|",         f: (t) => 70 + 30 * Math.abs(Math.sin(2 * t)) },
+  { nom: "Horizon",   teinte: 140, formule: "r(t) = 100 + 40·sin(t)·sin(3t)",   f: (t) => 100 + 40 * Math.sin(t) * Math.sin(3 * t) },
+  { nom: "cockpit",   teinte: 100, formule: "r(t) = 40 + 60·sin(4t)²",          f: (t) => 40 + 60 * Math.pow(Math.sin(4 * t), 2) },
+  { nom: "vif",       teinte: 300, formule: "r(t) = 75 + 25·cos(6t)",           f: (t) => 75 + 25 * Math.cos(6 * t) },
+  { nom: "copilote",  teinte: 160, formule: "r(t) = 85 + 35·sin(2t)·cos(4t)",   f: (t) => 85 + 35 * Math.sin(2 * t) * Math.cos(4 * t) },
+];
+
+let calculs = 0;
+
+function init() {
+  DPR = window.devicePixelRatio || 1;
+  W = window.innerWidth;
+  H = window.innerHeight;
+  canvas.width = W * DPR;
+  canvas.height = H * DPR;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  CX = W / 2;
+  CY = H / 2;
+
+  // Afficher la liste des projets dans le HUD
+  const div = document.getElementById('projets');
+  div.innerHTML = PROJETS.map(p =>
+    `<div class="proj"><span class="dot" style="background:hsl(${p.teinte},70%,60%)"></span>${p.nom}</div>`
+  ).join('');
+}
+
+function dessiner() {
+  T += 0.016;
+
+  // Effet de traînée douce
+  ctx.fillStyle = 'rgba(10,10,18,0.15)';
+  ctx.fillRect(0, 0, W, H);
+
+  const N = 400; // nombre de points par courbe
+  const dt = 0.02;
+
+  for (let p = 0; p < PROJETS.length; p++) {
+    const proj = PROJETS[p];
+    const offset = p * 0.7;
+    const rotation = T * 0.3 + p * 0.5;
+
+    // ── C'EST ICI QUE LE CALCUL SE FAIT ──
+    // Chaque point est une évaluation de la formule du projet.
+    ctx.beginPath();
+    for (let i = 0; i <= N; i++) {
+      const t = i * dt + T;
+      const r = proj.f(t + offset);           // ← FORMULE
+      const angle = i * dt * 2 + rotation;    // ← ROTATION
+
+      const x = CX + Math.cos(angle) * r;
+      const y = CY + Math.sin(angle) * r;
+
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+
+      calculs++;
+    }
+
+    const alpha = 0.4 + 0.3 * Math.sin(T + p);
+    ctx.strokeStyle = `hsla(${proj.teinte},70%,60%,${alpha})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // ── POINT VIVANT ──
+    // Le point qui parcourt la courbe EST le calcul en action.
+    const t_point = T * 2 + p;
+    const r_point = proj.f(t_point + offset);
+    const angle_point = t_point * 2 + rotation;
+    const xp = CX + Math.cos(angle_point) * r_point;
+    const yp = CY + Math.sin(angle_point) * r_point;
+
+    ctx.fillStyle = `hsla(${proj.teinte},90%,75%,1)`;
+    ctx.beginPath();
+    ctx.arc(xp, yp, 3, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Halo du point
+    const g = ctx.createRadialGradient(xp, yp, 0, xp, yp, 15);
+    g.addColorStop(0, `hsla(${proj.teinte},90%,70%,0.6)`);
+    g.addColorStop(1, `hsla(${proj.teinte},90%,70%,0)`);
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(xp, yp, 15, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Mettre à jour le HUD
+  document.getElementById('t').textContent = T.toFixed(1);
+  document.getElementById('calc').textContent = calculs.toLocaleString();
+
+  // Afficher la formule du projet en cours
+  const idx = Math.floor(T) % PROJETS.length;
+  document.getElementById('formule').textContent = PROJETS[idx].nom + " → " + PROJETS[idx].formule;
+
+  requestAnimationFrame(dessiner);
+}
+
+// ─── SIGNATURE ───
+async function signer() {
+  const contenu = document.documentElement.outerHTML;
+  const data = new TextEncoder().encode(contenu);
+  const hashBuf = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = Array.from(new Uint8Array(hashBuf))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+  document.getElementById('hash').textContent = hashHex.slice(0, 32);
+}
+
+window.addEventListener('resize', init);
+init();
+dessiner();
+signer();
+</script>
+</body>
+</html>
