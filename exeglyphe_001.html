@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="exeglyphe" content="1.0">
+<meta name="hash" id="expected-hash" content="efccaf01c3f1f8c39f2a04a918f276e717cb6a2eab25001220e27873a8969bbe">
+<meta name="created" content="2026-10-05T00:00:00Z">
+<meta name="title" content="Rule 110">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e0e0e0;font:14px/1.6 monospace;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:2rem}
+h1{font-size:1.1rem;font-weight:400;letter-spacing:.1em;margin-bottom:.5rem}
+#status{font-size:.8rem;color:#666;margin-bottom:1rem}
+#status.ok{color:#4a4}
+#status.fail{color:#f44}
+canvas{border:1px solid #222;image-rendering:pixelated}
+footer{margin-top:1rem;font-size:.7rem;color:#444}
+</style>
+</head>
+<body>
+<h1>EXEGLYPHE 001 - RULE 110</h1>
+<div id="status">verification...</div>
+<canvas id="c"></canvas>
+<footer>sha256 auto-verifie - aucun reseau - un fichier</footer>
+<script id="core" type="text/x-exeglyphe">
+// === EXEGLYPHE COMPUTATION CODE ===
+const W = 161;
+const CELL = 4;
+const MAX_STEPS = 400;
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+canvas.width = W * CELL;
+canvas.height = MAX_STEPS * CELL;
+let row = new Array(W).fill(0);
+row[W >> 1] = 1;
+const RULE = [0,1,1,0,1,1,0,0];
+function step(prev) {
+  const next = new Array(W).fill(0);
+  for (let i = 0; i < W; i++) {
+    const l = i > 0 ? prev[i-1] : 0;
+    const s = prev[i];
+    const r = i < W-1 ? prev[i+1] : 0;
+    next[i] = RULE[(l << 2) | (s << 1) | r];
+  }
+  return next;
+}
+let t = 0;
+function render() {
+  if (t >= MAX_STEPS) return;
+  ctx.fillStyle = '#0a0a0a';
+  ctx.fillRect(0, t * CELL, canvas.width, CELL);
+  for (let i = 0; i < W; i++) {
+    if (row[i]) {
+      ctx.fillStyle = 'hsl(' + ((t / MAX_STEPS) * 60 + 200) + ', 70%, 55%)';
+      ctx.fillRect(i * CELL, t * CELL, CELL, CELL);
+    }
+  }
+  row = step(row);
+  t++;
+  requestAnimationFrame(render);
+}
+render();
+// === FIN DE LA SECTION HACHÉE ===
+</script>
+<script>
+async function verify() {
+  const status = document.getElementById('status');
+  const expected = document.getElementById('expected-hash').content;
+  const core = document.getElementById('core').textContent;
+  if (expected === 'REMPLACER_PAR_HASH') {
+    status.textContent = 'hash non configure - mode demo';
+    new Function(core)();
+    return;
+  }
+  try {
+    const data = new TextEncoder().encode(core);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const actual = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    if (actual === expected) {
+      status.textContent = 'integrite verifiee - sha256: ' + expected.slice(0, 16) + '...';
+      status.className = 'ok';
+      new Function(core)();
+    } else {
+      status.textContent = 'INTEGRITE ROMPUE';
+      status.className = 'fail';
+    }
+  } catch (e) {
+    status.textContent = 'erreur: ' + e.message;
+  }
+}
+verify();
+</script>
+</body>
+</html>
